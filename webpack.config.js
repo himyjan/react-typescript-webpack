@@ -16,12 +16,17 @@ module.exports = {
     client: { overlay: false },
   },
   entry: {
-    main: './src/index.tsx',
+    main: './src/index.js',
   },
   module: {
     rules: [
       {
-        test: /\.(js(x?)|ts(x?))?$/,
+        test: /\.js(x?)$/,
+        include: path.join(__dirname, 'src'),
+        use: 'babel-loader',
+      },
+      {
+        test: /\.(ts(x?))?$/,
         include: path.join(__dirname, 'src'),
         use: [
           {
