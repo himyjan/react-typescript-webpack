@@ -21,7 +21,12 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.(js(x?)|ts(x?))?$/,
+        test: /\.js(x?)$/,
+        include: path.join(__dirname, 'src'),
+        use: 'babel-loader',
+      },
+      {
+        test: /\.(ts(x?))?$/,
         include: path.join(__dirname, 'src'),
         use: [
           {

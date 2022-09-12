@@ -4,9 +4,11 @@
     "lib": ["dom", "dom.iterable", "esnext"],
     "module": "ESNext",
     "moduleResolution": "node",
-    "outDir": "dist",
+    "outDir": "build",
     "target": "ESNext",
-    "sourceMap": true
+    "sourceMap": true,
+    "allowJs": false,
+    "noEmit": true // Do not compile the JS (or TS) files in this project on build
   },
-  "include": ["src", "custom.d.ts"]
+  "include": ["src"]
 }
