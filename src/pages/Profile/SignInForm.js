@@ -1,10 +1,10 @@
-import React, { useState } from "react";
-import styled from "styled-components";
-import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
-import { signIn } from "./Profile";
-import { useNavigate } from "react-router-dom";
+import React, { useState } from 'react';
+import styled from 'styled-components';
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
+import { signIn } from './Profile';
+import { useNavigate } from 'react-router-dom';
 
 const FormLegend = styled.legend`
   line-height: 19px;
@@ -62,15 +62,15 @@ const CheckoutButton = styled.button`
 `;
 
 const formInputs = [
-  { label: "Email", key: "email", error: "請輸入正確的email格式" },
-  { label: "Password", key: "password", error: "此欄位必填" }
+  { label: 'Email', key: 'email', error: '請輸入正確的email格式' },
+  { label: 'Password', key: 'password', error: '此欄位必填' },
 ];
 
 const SignUpForm = () => {
   const [recipient, setRecipient] = useState({
-    name: "",
-    email: "",
-    password: ""
+    name: '',
+    email: '',
+    password: '',
   });
   const navigate = useNavigate();
 
@@ -79,34 +79,34 @@ const SignUpForm = () => {
     .shape({
       email: yup
         .string()
-        .required("此欄位必填")
+        .required('此欄位必填')
         .matches(/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/)
-        .min(1, { message: "此欄位必填" }),
+        .min(1, { message: '此欄位必填' }),
       password: yup
         .string()
-        .required("此欄位必填")
-        .min(1, { message: "此欄位必填" })
+        .required('此欄位必填')
+        .min(1, { message: '此欄位必填' }),
     })
     .required();
 
   const {
     register,
     handleSubmit,
-    formState: { errors }
+    formState: { errors },
   } = useForm({
     defaultValues: {
-      email: "",
-      password: ""
+      email: '',
+      password: '',
     },
-    resolver: yupResolver(schema)
+    resolver: yupResolver(schema),
   });
 
   return (
     <form
       onSubmit={handleSubmit((data) => {
-        signIn("native", data.email, data.password);
+        signIn('native', data.email, data.password);
         setTimeout(() => {
-          navigate("/");
+          navigate('/');
         }, 1000);
       })}
     >

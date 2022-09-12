@@ -1,17 +1,17 @@
-import ReactDOM from "react-dom/client";
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import ReactDOM from 'react-dom/client';
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 
-import App from "./App";
-import Checkout from "./pages/Checkout/Checkout";
-import Home from "./pages/Home/Home";
-import ThankYou from "./pages/ThankYou/ThankYou";
-import Product from "./pages/Product/Product";
-import Profile from "./pages/Profile/Profile";
+import App from './App';
+import Checkout from './pages/Checkout/Checkout';
+import Home from './pages/Home/Home';
+import ThankYou from './pages/ThankYou/ThankYou';
+import Product from './pages/Product/Product';
+import Profile from './pages/Profile/Profile';
 
-import SignUpForm from "./pages/Profile/SignUpForm";
-import SignInForm from "./pages/Profile/SignInForm";
+import SignUpForm from './pages/Profile/SignUpForm';
+import SignInForm from './pages/Profile/SignInForm';
 
-const root = ReactDOM.createRoot(document.getElementById("root"));
+const root = ReactDOM.createRoot(document.getElementById('root'));
 
 root.render(
   <BrowserRouter>

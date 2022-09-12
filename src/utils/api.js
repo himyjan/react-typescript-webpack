@@ -1,5 +1,5 @@
 const api = {
-  hostname: "https://api.appworks-school.tw/api/1.0",
+  hostname: 'https://api.appworks-school.tw/api/1.0',
   async getProducts(category, paging) {
     const response = await fetch(
       `${this.hostname}/products/${category}?paging=${paging}`
@@ -24,10 +24,10 @@ const api = {
     const response = await fetch(`${this.hostname}/order/checkout`, {
       body: JSON.stringify(data),
       headers: new Headers({
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${jwtToken}`
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${jwtToken}`,
       }),
-      method: "POST"
+      method: 'POST',
     });
     return await response.json();
   },
@@ -35,9 +35,9 @@ const api = {
     const response = await fetch(`${this.hostname}/user/signin`, {
       body: JSON.stringify(data),
       headers: new Headers({
-        "Content-Type": "application/json"
+        'Content-Type': 'application/json',
       }),
-      method: "POST"
+      method: 'POST',
     });
     return await response.json();
   },
@@ -45,21 +45,21 @@ const api = {
     const response = await fetch(`${this.hostname}/user/signup`, {
       body: JSON.stringify(data),
       headers: new Headers({
-        "Content-Type": "application/json"
+        'Content-Type': 'application/json',
       }),
-      method: "POST"
+      method: 'POST',
     });
     return await response.json();
   },
   async getProfile(jwtToken) {
     const response = await fetch(`${this.hostname}/user/profile`, {
       headers: new Headers({
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${jwtToken}`
-      })
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${jwtToken}`,
+      }),
     });
     return await response.json();
-  }
+  },
 };
 
 export default api;

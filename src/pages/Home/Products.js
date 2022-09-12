@@ -1,12 +1,9 @@
-import { useEffect, useState, useRef } from "react";
-import { Link, useSearchParams } from "react-router-dom";
-import styled from "styled-components";
-import ReactLoading from "react-loading";
+import { useEffect, useState, useRef } from 'react';
+import { Link, useSearchParams } from 'react-router-dom';
+import styled from 'styled-components';
+import ReactLoading from 'react-loading';
 
-import api from "../../utils/api";
-
-import { FixedSizeList as List } from "react-window";
-import InfiniteLoader from "react-window-infinite-loader";
+import api from '../../utils/api';
 
 const Wrapper = styled.div`
   max-width: 1200px;
@@ -124,8 +121,8 @@ const useInfiniteScroll = (callback) => {
   const [isFetching, setIsFetching] = useState(false);
 
   useEffect(() => {
-    window.addEventListener("scroll", isScrolling);
-    return () => window.removeEventListener("scroll", isScrolling);
+    window.addEventListener('scroll', isScrolling);
+    return () => window.removeEventListener('scroll', isScrolling);
   }, []);
 
   useEffect(() => {
@@ -150,8 +147,8 @@ const Products = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [searchParams] = useSearchParams();
 
-  const keyword = searchParams.get("keyword");
-  const category = searchParams.get("category") || "all";
+  const keyword = searchParams.get('keyword');
+  const category = searchParams.get('category') || 'all';
 
   const [savedCategory, setSavedCategory] = useState(category);
   const [nextPaging, setNextPaging] = useState(0);

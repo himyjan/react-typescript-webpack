@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect } from 'react';
 
 const Delayed = ({ children, waitBeforeShow = 1000 }) => {
   const [isShown, setIsShown] = useState(false);

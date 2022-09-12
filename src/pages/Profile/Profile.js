@@ -1,10 +1,10 @@
-import { useState } from "react";
-import styled from "styled-components";
+import { useState } from 'react';
+import styled from 'styled-components';
 
-import api from "../../utils/api";
-import getJwtToken from "../../utils/getJwtToken";
+import api from '../../utils/api';
+import getJwtToken from '../../utils/getJwtToken';
 
-import { NavLink, Outlet } from "react-router-dom";
+import { NavLink, Outlet } from 'react-router-dom';
 
 const Wrapper = styled.div`
   padding: 60px 20px;
@@ -39,7 +39,7 @@ const PageSwitcher = styled.div`
   justify-content: space-evenly;
   align-items: center;
   background: linear-gradient(
-    to ${(props) => (props.isSignIn ? "right" : "left")},
+    to ${(props) => (props.isSignIn ? 'right' : 'left')},
     rgb(211, 225, 241) 0%,
     rgb(211, 225, 241) 50%,
     white 50%,
@@ -51,7 +51,7 @@ const PageSwitcher = styled.div`
   border: solid 1px black;
 
   &:after {
-    content: "";
+    content: '';
     position: absolute;
     z-index: 10;
     top: 0;
@@ -66,14 +66,14 @@ export const signIn = (Provider, Email, Password) => {
   let body = {
     provider: Provider,
     email: Email,
-    password: Password
+    password: Password,
   };
 
   api.signin(body).then((response) => {
     if (response.error) {
       window.alert(response.error);
     } else if (response.data) {
-      window.localStorage.setItem("jwtToken", response.data.access_token);
+      window.localStorage.setItem('jwtToken', response.data.access_token);
     }
   });
 };
@@ -82,24 +82,24 @@ export const signUp = (Name, Email, Password) => {
   let body = {
     name: Name,
     email: Email,
-    password: Password
+    password: Password,
   };
 
   api.signUp(body).then((response) => {
     if (response.error) {
       window.alert(response.error);
     } else if (response.data) {
-      window.localStorage.setItem("jwtToken", response.data.access_token);
+      window.localStorage.setItem('jwtToken', response.data.access_token);
     }
   });
 };
 
 export const Profile = () => {
   const [profile, setProfile] = useState();
-  const [signMode, setSignMode] = useState("sign-in");
+  const [signMode, setSignMode] = useState('sign-in');
 
   async function getProfile() {
-    let jwtToken = window.localStorage.getItem("jwtToken");
+    let jwtToken = window.localStorage.getItem('jwtToken');
 
     if (!jwtToken) {
       try {
@@ -109,7 +109,7 @@ export const Profile = () => {
         return;
       }
     }
-    window.localStorage.setItem("jwtToken", jwtToken);
+    window.localStorage.setItem('jwtToken', jwtToken);
     const { data } = await api.getProfile(jwtToken);
     setProfile(data);
   }
@@ -120,7 +120,7 @@ export const Profile = () => {
       {!profile && (
         <>
           <PageSwitcher
-            isSignIn={signMode === "sign-in"}
+            isSignIn={signMode === 'sign-in'}
             className="pageSwitcher"
           >
             <NavLink
@@ -128,7 +128,7 @@ export const Profile = () => {
               to="/profile/sign-in"
               className="sign-in-link"
               onClick={() => {
-                setSignMode("sign-in");
+                setSignMode('sign-in');
               }}
             >
               Sign In
@@ -138,7 +138,7 @@ export const Profile = () => {
               to="/profile/sign-up"
               className="sign-up-link"
               onClick={() => {
-                setSignMode("sign-up");
+                setSignMode('sign-up');
               }}
             >
               Sign Up
@@ -155,7 +155,7 @@ export const Profile = () => {
           <Content>{profile.email}</Content>
           <LogoutButton
             onClick={() => {
-              window.localStorage.removeItem("jwtToken");
+              window.localStorage.removeItem('jwtToken');
               setTimeout(() => {
                 setProfile();
               }, 2500);
