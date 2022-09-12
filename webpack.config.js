@@ -6,6 +6,11 @@ const ReactRefreshTypeScript = require('react-refresh-typescript');
 
 const isDevelopment = process.env.NODE_ENV !== 'production';
 
+const fs = require('fs'),
+  entries = fs.readdirSync('./src/').filter(function (file) {
+    return file.match(/(index.js(x?)|index.ts(x?))$/);
+  });
+
 module.exports = {
   output: {
     path: path.join(process.cwd(), 'build'),
@@ -16,7 +21,7 @@ module.exports = {
     client: { overlay: false },
   },
   entry: {
-    main: './src/index.js',
+    main: './src/' + entries,
   },
   module: {
     rules: [
