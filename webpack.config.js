@@ -7,6 +7,10 @@ const ReactRefreshTypeScript = require('react-refresh-typescript');
 const isDevelopment = process.env.NODE_ENV !== 'production';
 
 module.exports = {
+  output: {
+    path: path.join(process.cwd(), 'build'),
+    filename: '[name].js',
+  },
   mode: isDevelopment ? 'development' : 'production',
   devServer: {
     client: { overlay: false },
@@ -17,7 +21,7 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.(js|jsx|ts|tsx)?$/,
+        test: /\.(js(x?)|ts(x?))?$/,
         include: path.join(__dirname, 'src'),
         use: [
           {
@@ -39,15 +43,11 @@ module.exports = {
         use: ['style-loader', 'css-loader', 'postcss-loader', 'sass-loader'],
       },
       {
-        test: /\.svg$/i,
-        type: 'asset',
-        resourceQuery: /url/, // *.svg?url
-      },
-      {
-        test: /\.svg$/i,
-        issuer: /\.[jt]sx?$/,
-        resourceQuery: { not: [/url/] }, // exclude react component if *.svg?url
-        use: ['@svgr/webpack'],
+        test: /\.(png|svg|jpg|jpeg|gif|ico)$/,
+        type: 'asset/resource',
+        generator: {
+          filename: 'media/[name][ext]',
+        },
       },
     ],
   },
