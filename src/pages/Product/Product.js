@@ -1,9 +1,9 @@
-import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import styled from 'styled-components';
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import styled from "styled-components";
 
-import api from '../../utils/api';
-import ProductVariants from './ProductVariants';
+import api from "../../utils/api";
+import ProductVariants from "./ProductVariants";
 
 const Wrapper = styled.div`
   max-width: 960px;
@@ -142,7 +142,7 @@ const StoryTitle = styled.div`
   }
 
   &::after {
-    content: '';
+    content: "";
     height: 1px;
     flex-grow: 1;
     background-color: #3f3a3a;

@@ -1,11 +1,16 @@
-import { useEffect, useRef, useState } from 'react';
-import { useNavigate, useOutletContext } from 'react-router-dom';
-import styled from 'styled-components';
+import { useContext, useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import styled from "styled-components";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
 
-import api from '../../utils/api';
-import getJwtToken from '../../utils/getJwtToken';
-import tappay from '../../utils/tappay';
-import Cart from './Cart';
+import api from "../../utils/api";
+import getJwtToken from "../../utils/getJwtToken";
+import tappay from "../../utils/tappay";
+import Cart from "./Cart";
+
+import { cartItemsContext } from "../../contexts/Context";
 
 const Wrapper = styled.div`
   margin: 0 auto;
@@ -276,39 +281,47 @@ const CheckoutButton = styled.button`
 
 const formInputs = [
   {
-    label: '收件人姓名',
-    key: 'name',
-    text: '務必填寫完整收件人姓名，避免包裹無法順利簽收',
+    label: "收件人姓名",
+    key: "name",
+    text: "務必填寫完整收件人姓名，避免包裹無法順利簽收",
+    error: "此欄位必填"
   },
-  { label: 'Email', key: 'email' },
-  { label: '手機', key: 'phone' },
-  { label: '地址', key: 'address' },
+  {
+    label: "手機",
+    key: "phone",
+    error: "請輸入正確手機號碼:前兩碼須為09,共10個數字,僅限數字不得有任何符號"
+  },
+  { label: "Email", key: "email", error: "請輸入正確的email格式" },
+  { label: "地址", key: "address", error: "此欄位必填" }
 ];
 
 const timeOptions = [
   {
-    label: '08:00-12:00',
-    value: 'morning',
+    label: "08:00-12:00",
+    value: "morning",
+    error: "此欄位必填"
   },
   {
-    label: '14:00-18:00',
-    value: 'afternoon',
+    label: "14:00-18:00",
+    value: "afternoon",
+    error: "此欄位必填"
   },
   {
-    label: '不指定',
-    value: 'anytime',
-  },
+    label: "不指定",
+    value: "anytime",
+    error: "此欄位必填"
+  }
 ];
 
 function Checkout() {
   const [recipient, setRecipient] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    address: '',
-    time: '',
+    name: "",
+    email: "",
+    phone: "",
+    address: "",
+    time: ""
   });
-  const [cartItems, setCartItems] = useOutletContext();
+  const [cartItems, setCartItems] = useContext(cartItemsContext);
   const navigate = useNavigate();
   const cardNumberRef = useRef();
   const cardExpirationDateRef = useRef();
@@ -328,10 +341,10 @@ function Checkout() {
     0
   );
 
-  const freight = 30;
+  const freight = subtotal > 0 ? 30 : 0;
 
   async function checkout() {
-    let jwtToken = window.localStorage.getItem('jwtToken');
+    let jwtToken = window.localStorage.getItem("jwtToken");
 
     if (!jwtToken) {
       try {
@@ -341,26 +354,26 @@ function Checkout() {
         return;
       }
     }
-    window.localStorage.setItem('jwtToken', jwtToken);
+    window.localStorage.setItem("jwtToken", jwtToken);
 
     if (cartItems.length === 0) {
-      window.alert('尚未選購商品');
+      window.alert("尚未選購商品");
       return;
     }
 
     if (Object.values(recipient).some((value) => !value)) {
-      window.alert('請填寫完整訂購資料');
+      window.alert("請填寫完整訂購資料");
       return;
     }
 
     if (!tappay.canGetPrime()) {
-      window.alert('付款資料輸入有誤');
+      window.alert("付款資料輸入有誤");
       return;
     }
 
     const result = await tappay.getPrime();
     if (result.status !== 0) {
-      window.alert('付款資料輸入有誤');
+      window.alert("付款資料輸入有誤");
       return;
     }
 
@@ -368,21 +381,63 @@ function Checkout() {
       {
         prime: result.card.prime,
         order: {
-          shipping: 'delivery',
-          payment: 'credit_card',
+          shipping: "delivery",
+          payment: "credit_card",
           subtotal,
           freight,
           total: subtotal + freight,
           recipient,
-          list: cartItems,
-        },
+          list: cartItems
+        }
       },
       jwtToken
     );
-    window.alert('付款成功');
+    window.alert("付款成功");
     setCartItems([]);
-    navigate('/thankyou', { state: { orderNumber: data.number } });
+    navigate("/thankyou", { state: { orderNumber: data.number } });
   }
+
+  const schema = yup
+    .object()
+    .shape({
+      name: yup
+        .string()
+        .required("此欄位必填")
+        .min(1, { message: "此欄位必填" }),
+      phone: yup
+        .string()
+        .required("此欄位必填")
+        .matches(/^09[0-9]{8}$/)
+        .min(10, { message: "此欄位必填10位數字" })
+        .max(10, { message: "此欄位必填10位數字" }),
+      address: yup.string().min(1, { message: "此欄位必填" }),
+      email: yup
+        .string()
+        .required("此欄位必填")
+        .matches(/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/)
+        .min(1, { message: "此欄位必填" }),
+      time: yup
+        .string()
+        .required("此欄位必填")
+        .min(1, { message: "此欄位必選" })
+    })
+    .required();
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset
+  } = useForm({
+    defaultValues: {
+      name: "",
+      phone: "",
+      address: "",
+      email: "",
+      time: ""
+    },
+    resolver: yupResolver(schema)
+  });
 
   return (
     <Wrapper>
@@ -402,7 +457,85 @@ function Checkout() {
         <br />● 選擇宅配-請填寫正確收件人資訊，避免包裹配送不達
         <br />● 選擇超商-請填寫正確收件人姓名(與證件相符)，避免無法領取
       </Note>
-      <form>
+      <form
+        onSubmit={handleSubmit((data, e) => {
+          checkout();
+          // e.target.reset();
+          // console.log(data);
+          // console.log(recipient);
+        })}
+      >
+        <FormFieldSet>
+          <FormLegend>訂購資料</FormLegend>
+          {formInputs.map((input) => (
+            <FormGroup key={input.key}>
+              <FormLabel>{input.label}</FormLabel>
+              <FormControl
+                {...register(`${input.key}`)}
+                id={input.key}
+                value={recipient[input.key]}
+                onChange={(e) =>
+                  setRecipient({ ...recipient, [input.key]: e.target.value })
+                }
+              />
+              {input.text && <FormText>{input.text}</FormText>}
+              {errors[input.key] && input.error}
+            </FormGroup>
+          ))}
+          <FormGroup>
+            <FormLabel>配送時間</FormLabel>
+            {timeOptions.map((option) => (
+              <FormCheck key={option.value}>
+                <FormCheckInput
+                  {...register("time")}
+                  id="time"
+                  type="radio"
+                  value={option.value}
+                  checked={recipient.time === option.value}
+                  onChange={(e) => {
+                    if (e.target.checked)
+                      setRecipient({ ...recipient, time: option.value });
+                  }}
+                />
+                <FormCheckLabel>{option.label}</FormCheckLabel>
+              </FormCheck>
+            ))}
+            {errors.time && timeOptions[0].error}
+          </FormGroup>
+        </FormFieldSet>
+        <FormFieldSet>
+          <FormLegend>付款資料</FormLegend>
+          <FormGroup>
+            <FormLabel>信用卡號碼</FormLabel>
+            <FormControl as="div" ref={cardNumberRef} />
+          </FormGroup>
+          <FormGroup>
+            <FormLabel>有效期限</FormLabel>
+            <FormControl as="div" ref={cardExpirationDateRef} />
+          </FormGroup>
+          <FormGroup>
+            <FormLabel>安全碼</FormLabel>
+            <FormControl as="div" ref={cardCCVRef} />
+          </FormGroup>
+        </FormFieldSet>
+        <SubtotalPrice>
+          <PriceName>總金額</PriceName>
+          <Currency>NT.</Currency>
+          <PriceValue>{subtotal}</PriceValue>
+        </SubtotalPrice>
+        <ShippingPrice>
+          <PriceName>運費</PriceName>
+          <Currency>NT.</Currency>
+          <PriceValue>{freight}</PriceValue>
+        </ShippingPrice>
+        <TotalPrice>
+          <PriceName>應付金額</PriceName>
+          <Currency>NT.</Currency>
+          <PriceValue>{subtotal + freight}</PriceValue>
+        </TotalPrice>
+        <CheckoutButton type="submit">確認付款</CheckoutButton>
+      </form>
+      {/* <form>
         <FormFieldSet>
           <FormLegend>訂購資料</FormLegend>
           {formInputs.map((input) => (
@@ -449,8 +582,8 @@ function Checkout() {
             <FormControl as="div" ref={cardCCVRef} />
           </FormGroup>
         </FormFieldSet>
-      </form>
-      <SubtotalPrice>
+      </form>*/}
+      {/* <SubtotalPrice>
         <PriceName>總金額</PriceName>
         <Currency>NT.</Currency>
         <PriceValue>{subtotal}</PriceValue>
@@ -465,7 +598,7 @@ function Checkout() {
         <Currency>NT.</Currency>
         <PriceValue>{subtotal + freight}</PriceValue>
       </TotalPrice>
-      <CheckoutButton onClick={checkout}>確認付款</CheckoutButton>
+      <CheckoutButton onClick={checkout}>確認付款</CheckoutButton> */}
     </Wrapper>
   );
 }

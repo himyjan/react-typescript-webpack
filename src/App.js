@@ -1,12 +1,12 @@
-import { useState } from 'react';
-import { Outlet } from 'react-router-dom';
-import { createGlobalStyle } from 'styled-components';
-import { Reset } from 'styled-reset';
+import { StrictMode, useState } from "react";
+import { Outlet } from "react-router-dom";
+import { createGlobalStyle } from "styled-components";
+import { Reset } from "styled-reset";
 
-import Footer from './components/Footer/Footer';
-import Header from './components/Header/Header';
+import Footer from "./components/Footer/Footer";
+import Header from "./components/Header/Header";
 
-import { cartItemsContext } from './utils/createContext';
+import { cartItemsContext } from "./contexts/Context";
 
 const GlobalStyle = createGlobalStyle`
   * {
@@ -30,11 +30,11 @@ const GlobalStyle = createGlobalStyle`
 
 function App() {
   const [cartItems, setCartItems] = useState(
-    JSON.parse(window.localStorage.getItem('cartItems')) || []
+    JSON.parse(window.localStorage.getItem("cartItems")) || []
   );
 
   return (
-    <>
+    <StrictMode>
       <cartItemsContext.Provider value={[cartItems, setCartItems]}>
         <Reset />
         <GlobalStyle />
@@ -42,7 +42,7 @@ function App() {
         <Outlet />
         <Footer />
       </cartItemsContext.Provider>
-    </>
+    </StrictMode>
   );
 }
 

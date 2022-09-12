@@ -1,7 +1,9 @@
-import { useOutletContext } from 'react-router-dom';
-import styled from 'styled-components';
+import { useContext } from "react";
+import styled from "styled-components";
 
-import trash from './trash.png';
+import trash from "./trash.png";
+
+import { cartItemsContext } from "../../contexts/Context";
 
 const Header = styled.div`
   display: flex;
@@ -21,7 +23,7 @@ const Quantity = styled.div`
   padding-left: 20px;
 
   @media screen and (max-width: 1279px) {
-    ${(props) => props.hideOnMobile && 'display: none;'}
+    ${(props) => props.hideOnMobile && "display: none;"}
   }
 `;
 
@@ -30,7 +32,7 @@ const UnitPrice = styled.div`
   padding-left: 12px;
 
   @media screen and (max-width: 1279px) {
-    ${(props) => props.hideOnMobile && 'display: none;'}
+    ${(props) => props.hideOnMobile && "display: none;"}
   }
 `;
 
@@ -39,7 +41,7 @@ const Price = styled.div`
   padding-left: 15px;
 
   @media screen and (max-width: 1279px) {
-    ${(props) => props.hideOnMobile && 'display: none;'}
+    ${(props) => props.hideOnMobile && "display: none;"}
   }
 `;
 
@@ -126,7 +128,7 @@ const ItemQuantity = styled.div`
 `;
 
 const ItemQuantityName = styled.div`
-  ${(props) => props.hideOnDesktop && 'display: none;'}
+  ${(props) => props.hideOnDesktop && "display: none;"}
 
   @media screen and (max-width: 1279px) {
     display: block;
@@ -158,7 +160,7 @@ const ItemUnitPrice = styled.div`
 `;
 
 const ItemUnitPriceName = styled.div`
-  ${(props) => props.hideOnDesktop && 'display: none;'}
+  ${(props) => props.hideOnDesktop && "display: none;"}
 
   @media screen and (max-width: 1279px) {
     display: block;
@@ -183,7 +185,7 @@ const ItemPrice = styled.div`
 `;
 
 const ItemPriceName = styled.div`
-  ${(props) => props.hideOnDesktop && 'display: none;'}
+  ${(props) => props.hideOnDesktop && "display: none;"}
 
   @media screen and (max-width: 1279px) {
     display: block;
@@ -210,27 +212,27 @@ const DeleteButton = styled.div`
 `;
 
 function Cart() {
-  const [cartItems, setCartItems] = useOutletContext();
+  const [cartItems, setCartItems] = useContext(cartItemsContext);
 
   function changeItemQuantity(itemIndex, itemQuantity) {
     const newCartItems = cartItems.map((item, index) =>
       index === itemIndex
         ? {
             ...item,
-            qty: itemQuantity,
+            qty: itemQuantity
           }
         : item
     );
     setCartItems(newCartItems);
-    window.localStorage.setItem('cartItems', JSON.stringify(newCartItems));
-    window.alert('已修改數量');
+    window.localStorage.setItem("cartItems", JSON.stringify(newCartItems));
+    window.alert("已修改數量");
   }
 
   function deleteItem(itemIndex) {
     const newCartItems = cartItems.filter((_, index) => index !== itemIndex);
     setCartItems(newCartItems);
-    window.localStorage.setItem('cartItems', JSON.stringify(newCartItems));
-    window.alert('已刪除商品');
+    window.localStorage.setItem("cartItems", JSON.stringify(newCartItems));
+    window.alert("已刪除商品");
   }
 
   return (
